@@ -65,8 +65,13 @@ type DomainRecord struct {
 func NewDomainRecord(name, t, data string, ttl int) (*DomainRecord, error) {
 	name = strings.TrimSpace(name)
 	data = strings.TrimSpace(data)
-	if err := ValidateData(data); err != nil {
-		return nil, err
+	if t == SOA {
+        if err := ValidateData(data); err != nil {
+            return nil, err
+	} else {
+        if err := ValidateData(data); err != nil {
+            return nil, err
+	    }
 	}
 	parts := strings.Split(name, ".")
 	if len(parts) < 1 || len(parts) > 255 {
@@ -103,12 +108,18 @@ func NewARecord(data string) (*DomainRecord, error) {
 
 // ValidateData performs bounds checking on a data element
 func ValidateData(data string) error {
-	if len(data) < 1 || len(data) > 255 {
+	if len(data) < 0 || len(data) > 255 {
 		return fmt.Errorf("data must be between 1..255 characters in length")
 	}
 	return nil
 }
-
+// ValidateSOAData performs bounds checking on a data element if record type is SOA
+func ValidateSOAData(data string) error {
+	if len(data) != 0 {
+		return fmt.Errorf("data must be 0 characters in length if the record type is SOA")
+	}
+	return nil
+}
 // IsDefaultARecord is a predicate to place fetched A domain records into the appropriate bucket
 func IsDefaultARecord(record *DomainRecord) bool {
 	return record.Name == "@" && record.Type == "A" && record.TTL == DefaultTTL
