@@ -105,6 +105,7 @@ func ValidateData(data string) error {
 	}
 	return nil
 }
+
 // ValidateSOAData performs bounds checking on a data element if record type is SOA
 func ValidateSOAData(data string) error {
 	if len(data) != 0 {
@@ -112,6 +113,7 @@ func ValidateSOAData(data string) error {
 	}
 	return nil
 }
+
 // IsDefaultARecord is a predicate to place fetched A domain records into the appropriate bucket
 func IsDefaultARecord(record *DomainRecord) bool {
 	return record.Name == "@" && record.Type == "A" && record.TTL == DefaultTTL

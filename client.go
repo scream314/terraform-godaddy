@@ -178,13 +178,14 @@ func validate(resp *http.Response) error {
 	var errResp = struct {
 		Code    string `json:"code"`
 		Message string `json:"message"`
+		Fields  string `json:"fields"`
 	}{}
 
 	if err := json.Unmarshal(body, &errResp); err != nil {
 		return err
 	}
 
-	return fmt.Errorf("[%d:%s] %s", resp.StatusCode, errResp.Code, errResp.Message)
+	return fmt.Errorf("[%d:%s] %s %s", resp.StatusCode, errResp.Code, errResp.Message, errResp.Fields)
 }
 
 func formatURL(baseURL string) (string, error) {
