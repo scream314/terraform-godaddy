@@ -4,12 +4,16 @@
 [ ![Codeship Status for n3integration/terraform-godaddy](https://app.codeship.com/projects/29e8c490-8b5d-0134-914d-3e63d62140d1/status?branch=master)](https://app.codeship.com/projects/184616)
 
 <dl>
-  <dt>Terraform v0.7.x</dt>
-  <dd>https://github.com/n3integration/terraform-godaddy/releases/tag/v1.0.0</dd>
-  <dt>Terraform v0.8.x</dt>
-  <dd>https://github.com/n3integration/terraform-godaddy/releases/tag/v1.2.3</dd>
+  <dt>Terraform v0.11.x</dt>
+  <dd>https://github.com/n3integration/terraform-godaddy/releases/tag/v1.6.0</dd>
+  <dt>Terraform v0.10.x</dt>
+  <dd>https://github.com/n3integration/terraform-godaddy/releases/tag/v1.5.0</dd>
   <dt>Terraform v0.9.x</dt>
   <dd>https://github.com/n3integration/terraform-godaddy/releases/tag/v1.3.0</dd>
+  <dt>Terraform v0.8.x</dt>
+  <dd>https://github.com/n3integration/terraform-godaddy/releases/tag/v1.2.3</dd>
+  <dt>Terraform v0.7.x</dt>
+  <dd>https://github.com/n3integration/terraform-godaddy/releases/tag/v1.0.0</dd>
 <dl>
 
 ## Warning
@@ -27,13 +31,13 @@ bash <(curl -s https://raw.githubusercontent.com/n3integration/terraform-godaddy
 In order to leverage the GoDaddy APIs, an [API key](https://developer.godaddy.com/keys/) is required. The key pair can be optionally stored in environment variables.
 
 ```bash
-export GD_KEY=abc
-export GD_SECRET=123
+export GODADDY_API_KEY=abc
+export GODADDY_API_SECRET=123
 ```
 
 ## Provider
 
-If `key` and `secret` aren't provided under the `godaddy` `provider`, they are expected to be exposed as environment variables: `GD_KEY` and `GD_SECRET`.
+If `key` and `secret` aren't provided under the `godaddy` `provider`, they are expected to be exposed as environment variables: `GODADDY_API_KEY` and `GODADDY_API_SECRET`.
 
 ```terraform
 provider "godaddy" {
@@ -71,6 +75,14 @@ resource "godaddy_domain_record" "gd-fancy-domain" {
   nameservers = ["ns7.domains.com", "ns6.domains.com"]
 }
 ```
+
+### Additional Information
+If your zone contains existing data, please ensure that your Terraform resource configuration includes all existing records, otherwise they will be removed.
+
+This plugin also supports Terraform's [import](https://www.terraform.io/docs/import/usage.html) feature. This will at least allow you to determine the changes introduced
+through `terraform plan` and update the resource configuration accordingly to preserve existing data. The supplied resource `id` to the `terraform import` command should
+be the name of the domain that you would like to import. Although this is currently a manual workaround, this plugin will be updated when Terraform includes support for
+fully automated imports.
 
 ## License
 
