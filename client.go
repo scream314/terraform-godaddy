@@ -14,7 +14,9 @@ import (
 )
 
 const (
+	headerAccept        = "Accept"
 	headerAuthorization = "Authorization"
+	headerContent       = "Content-Type"
 	headerCustomerID    = "X-Shopper-Id"
 	mediaTypeJSON       = "application/json"
 	pathDomainRecords   = "%s/v1/domains/%s/records"
@@ -81,6 +83,23 @@ func NewClient(baseURL, key, secret string) (*GoDaddyClient, error) {
 	}, nil
 }
 
+// GetDomains fetches the details for the provided domain
+func (c *GoDaddyClient) GetDomains(customerID string) ([]Domain, error) {
+	url := fmt.Sprintf(pathDomains, c.baseURL, "")
+
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	if err != nil {
+		return nil, err
+	}
+
+	d := []Domain{}
+	if err := c.execute(customerID, req, &d); err != nil {
+		return nil, err
+	}
+
+	return d, nil
+}
+
 // GetDomain fetches the details for the provided domain
 func (c *GoDaddyClient) GetDomain(customerID, domain string) (*Domain, error) {
 	url := fmt.Sprintf(pathDomains, c.baseURL, domain)
@@ -123,7 +142,9 @@ func (c *GoDaddyClient) UpdateDomainRecords(customerID, domain string, records [
 	}
 
 	url := fmt.Sprintf(pathDomainRecords, c.baseURL, domain)
-	req, err := http.NewRequest(http.MethodPut, url, bytes.NewBuffer(msg))
+	method := http.MethodPut
+
+	req, err := http.NewRequest(method, url, bytes.NewBuffer(msg))
 	if err != nil {
 		return err
 	}
@@ -136,8 +157,8 @@ func (c *GoDaddyClient) execute(customerID string, req *http.Request, result int
 		req.Header.Set(headerCustomerID, customerID)
 	}
 
-	req.Header.Set("Accept", mediaTypeJSON)
-	req.Header.Set("Content-Type", mediaTypeJSON)
+	req.Header.Set(headerAccept, mediaTypeJSON)
+	req.Header.Set(headerContent, mediaTypeJSON)
 	req.Header.Set(headerAuthorization, fmt.Sprintf("sso-key %s:%s", c.key, c.secret))
 
 	resp, err := c.client.Do(req)
