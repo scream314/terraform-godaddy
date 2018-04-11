@@ -63,7 +63,7 @@ func NewDomainRecord(name, t, data string, ttl int) (*DomainRecord, error) {
 	name = strings.TrimSpace(name)
 	data = strings.TrimSpace(data)
 	if t == "SOA" {
-        if err := ValidateData(data); err != nil {
+        if err := ValidateSOAData(data); err != nil {
             return nil, err
         }
 	} else {
