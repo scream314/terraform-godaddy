@@ -65,6 +65,7 @@ func NewDomainRecord(name, t, data string, ttl int) (*DomainRecord, error) {
 	if t == SOA {
         if err := ValidateData(data); err != nil {
             return nil, err
+        }
 	} else {
         if err := ValidateData(data); err != nil {
             return nil, err
