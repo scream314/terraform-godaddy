@@ -62,7 +62,7 @@ type DomainRecord struct {
 func NewDomainRecord(name, t, data string, ttl int) (*DomainRecord, error) {
 	name = strings.TrimSpace(name)
 	data = strings.TrimSpace(data)
-	if t == SOA {
+	if t == "SOA" {
         if err := ValidateData(data); err != nil {
             return nil, err
         }
